@@ -199,11 +199,11 @@
   <text x="528" y="172.5" text-anchor="middle" font-size="8" fill="#6e7681">IO41</text>
   <text x="547" y="172.5" font-size="7.5" fill="#444c56">free</text>
 
-  <!-- R8: IO40 free -->
-  <circle cx="504" cy="192" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="187" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="194.5" text-anchor="middle" font-size="8" fill="#6e7681">IO40</text>
-  <text x="547" y="194.5" font-size="7.5" fill="#444c56">free</text>
+  <!-- R8: IO40 — IR sensor (exit) -->
+  <circle cx="504" cy="192" r="4.5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/>
+  <rect x="513" y="187" width="30" height="10" rx="2" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1"/>
+  <text x="528" y="194.5" text-anchor="middle" font-size="8" fill="#c9e94a">IO40</text>
+  <text x="547" y="194.5" font-size="7.5" fill="#c9e94a">IR sensor (exit)</text>
 
   <!-- R9: IO39 — SERVO SG90 gate -->
   <circle cx="504" cy="214" r="4.5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/>
@@ -409,7 +409,7 @@
   <text x="325" y="480.5" text-anchor="end" font-size="7.5" fill="#ffa657">5V (HC-SR04, LCD) ←</text>
 
   <!-- ════ LEGEND (right panel) ════ -->
-  <rect x="620" y="14" width="342" height="204" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="620" y="14" width="342" height="220" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
   <text x="791" y="29" text-anchor="middle" font-size="8.5" font-weight="700" fill="#8b949e" letter-spacing="1">PIN LEGEND</text>
   <circle cx="636" cy="44" r="5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/><text x="648" y="47" font-size="8" fill="#ff7b72">HC-SR04 #1 (IO1, IO2)</text>
   <circle cx="636" cy="60" r="5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/><text x="648" y="63" font-size="8" fill="#3fb950">HC-SR04 #2 (IO4, IO5)</text>
@@ -419,26 +419,27 @@
   <circle cx="636" cy="124" r="5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/><text x="648" y="127" font-size="8" fill="#f85149">Red LED ×3 (IO15, 16, 17)</text>
   <circle cx="636" cy="140" r="5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/><text x="648" y="143" font-size="8" fill="#56d364">Green LED ×3 (IO18, 21, 38)</text>
   <circle cx="636" cy="156" r="5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/><text x="648" y="159" font-size="8" fill="#db61a2">Servo SG90 gate (IO39)</text>
-  <circle cx="636" cy="172" r="5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="175" font-size="8" fill="#ffa657">Power (VIN / 3V3 / GND)</text>
-  <circle cx="636" cy="188" r="5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="191" font-size="8" fill="#ffa657">⚠ Boot/USB/strapping — avoid</text>
-  <circle cx="636" cy="204" r="5" fill="#21262d" stroke="#30363d" stroke-width="1"/><text x="648" y="207" font-size="8" fill="#6e7681">Free GPIO</text>
+  <circle cx="636" cy="172" r="5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/><text x="648" y="175" font-size="8" fill="#c9e94a">IR sensor — exit (IO40)</text>
+  <circle cx="636" cy="188" r="5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="191" font-size="8" fill="#ffa657">Power (VIN / 3V3 / GND)</text>
+  <circle cx="636" cy="204" r="5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="207" font-size="8" fill="#ffa657">⚠ Boot/USB/strapping — avoid</text>
+  <circle cx="636" cy="220" r="5" fill="#21262d" stroke="#30363d" stroke-width="1"/><text x="648" y="223" font-size="8" fill="#6e7681">Free GPIO</text>
 
   <!-- GPIO usage summary -->
-  <rect x="620" y="218" width="342" height="118" rx="5" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
-  <text x="791" y="233" text-anchor="middle" font-size="8" font-weight="700" fill="#8b949e">GPIO SUMMARY</text>
-  <text x="630" y="249" font-size="8" fill="#8b949e">Used by project:</text><text x="760" y="249" font-size="8" fill="#e6edf3">20 pins</text>
-  <text x="630" y="263" font-size="8" fill="#8b949e">Restricted (USB/boot/flash):</text><text x="800" y="263" font-size="8" fill="#ff7b72">~9 pins</text>
-  <text x="630" y="277" font-size="8" fill="#8b949e">Still free for expansion:</text><text x="780" y="277" font-size="8" fill="#3fb950">~16 pins ✓</text>
-  <line x1="630" y1="287" x2="952" y2="287" stroke="#21262d" stroke-width="1"/>
-  <text x="630" y="301" font-size="7.5" fill="#3fb950">✓  SPI2 default pins (10–13) — no conflict</text>
-  <text x="630" y="314" font-size="7.5" fill="#3fb950">✓  I²C on IO8/IO9 — no remap needed</text>
-  <text x="630" y="327" font-size="7.5" fill="#3fb950">✓  6 LED + 1 servo on dedicated free GPIOs</text>
+  <rect x="620" y="234" width="342" height="118" rx="5" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="791" y="249" text-anchor="middle" font-size="8" font-weight="700" fill="#8b949e">GPIO SUMMARY</text>
+  <text x="630" y="265" font-size="8" fill="#8b949e">Used by project:</text><text x="760" y="265" font-size="8" fill="#e6edf3">21 pins</text>
+  <text x="630" y="279" font-size="8" fill="#8b949e">Restricted (USB/boot/flash):</text><text x="800" y="279" font-size="8" fill="#ff7b72">~9 pins</text>
+  <text x="630" y="293" font-size="8" fill="#8b949e">Still free for expansion:</text><text x="780" y="293" font-size="8" fill="#3fb950">~15 pins ✓</text>
+  <line x1="630" y1="303" x2="952" y2="303" stroke="#21262d" stroke-width="1"/>
+  <text x="630" y="317" font-size="7.5" fill="#3fb950">✓  SPI2 default pins (10–13) — no conflict</text>
+  <text x="630" y="330" font-size="7.5" fill="#3fb950">✓  I²C on IO8/IO9 — no remap needed</text>
+  <text x="630" y="343" font-size="7.5" fill="#3fb950">✓  6 LED + 1 servo + 1 IR on dedicated free GPIOs</text>
 
   <!-- Flash warning box -->
-  <rect x="620" y="353" width="342" height="60" rx="5" fill="#1a0808" stroke="#6e1313" stroke-width="1" stroke-dasharray="4,2"/>
-  <text x="791" y="368" text-anchor="middle" font-size="8" font-weight="700" fill="#ff7b72">🚫 S3 — NEVER USE</text>
-  <text x="630" y="383" font-size="7.5" fill="#ff7b72">GPIO26–32: Internal SPI flash (will crash)</text>
-  <text x="630" y="396" font-size="7.5" fill="#ffa657">GPIO33–37: Tied to PSRAM (on N8R8 variant)</text>
+  <rect x="620" y="369" width="342" height="60" rx="5" fill="#1a0808" stroke="#6e1313" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="791" y="384" text-anchor="middle" font-size="8" font-weight="700" fill="#ff7b72">🚫 S3 — NEVER USE</text>
+  <text x="630" y="399" font-size="7.5" fill="#ff7b72">GPIO26–32: Internal SPI flash (will crash)</text>
+  <text x="630" y="412" font-size="7.5" fill="#ffa657">GPIO33–37: Tied to PSRAM (on N8R8 variant)</text>
 </svg>
 </div>
 
@@ -505,7 +506,18 @@
       <tr><td class="pc">Signal</td><td class="gc">39</td><td class="nc">ESP32Servo lib</td></tr>
       <tr><td class="pc">VCC</td><td class="gc">VIN</td><td class="nc">5V rail</td></tr>
       <tr><td class="pc">GND</td><td class="gc">GND</td><td class="nc">Shared</td></tr>
-      <tr><td colspan="3" class="nc">Opens on valid RFID scan, auto-closes after 3s</td></tr>
+      <tr><td colspan="3" class="nc">Opens on whitelisted RFID OR exit IR trigger, auto-closes after 3s</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-hd" style="color:#c9e94a">🚧 IR Sensor — Exit lane</div>
+    <table>
+      <tr><th>Pin</th><th>GPIO</th><th>Note</th></tr>
+      <tr><td class="pc">OUT</td><td class="gc">40</td><td class="nc">Digital, polarity configurable</td></tr>
+      <tr><td class="pc">VCC</td><td class="gc">3V3</td><td class="nc">Most modules are 3.3V logic</td></tr>
+      <tr><td class="pc">GND</td><td class="gc">GND</td><td class="nc">Shared</td></tr>
+      <tr><td colspan="3" class="nc">No auth needed — any obstacle opens the gate to exit</td></tr>
     </table>
   </div>
 </div>
@@ -521,14 +533,21 @@
       <span class="lt lt-blu">ESP32Servo</span>
     </div>
   </div>
-  <pre><span class="cm">// ESP32-S3 DevKitC-1 — HC-SR04x3 + RC522 + LCD 16x2 I2C + 6x status LED + SG90 gate
-// Cleaner than DEVKIT V1: no HSPI, no I2C remap, no GPIO12 concern</span>
+  <pre><span class="cm">// ESP32-S3 DevKitC-1 — HC-SR04x3 + RC522 (whitelisted) + IR exit + LCD 16x2 I2C
+//                       + 6x status LED + shared SG90 gate + optional Blynk IoT</span>
+
+<span class="kw">#include</span> <span class="st">"blynk_config.h"</span>   <span class="cm">// must come before any Blynk library include</span>
+<span class="kw">#if</span> ENABLE_BLYNK
+  <span class="kw">#include</span> <span class="st">&lt;WiFi.h&gt;</span>
+  <span class="kw">#include</span> <span class="st">&lt;BlynkSimpleEsp32.h&gt;</span>
+<span class="kw">#endif</span>
 
 <span class="kw">#include</span> <span class="st">&lt;SPI.h&gt;</span>
 <span class="kw">#include</span> <span class="st">&lt;MFRC522.h&gt;</span>
 <span class="kw">#include</span> <span class="st">&lt;Wire.h&gt;</span>
 <span class="kw">#include</span> <span class="st">&lt;LiquidCrystal_I2C.h&gt;</span>
 <span class="kw">#include</span> <span class="st">&lt;ESP32Servo.h&gt;</span>
+<span class="kw">#include</span> <span class="st">"rfid_whitelist.h"</span>
 
 <span class="cm">// ── HC-SR04 + per-slot status LEDs ────────────────────</span>
 <span class="tp">struct</span> Sensor { <span class="kw">uint8_t</span> trig; <span class="kw">uint8_t</span> echo; <span class="kw">uint8_t</span> redPin; <span class="kw">uint8_t</span> greenPin; <span class="kw">const char</span>* label; };
@@ -539,6 +558,7 @@
 };
 <span class="kw">const int</span> NUM_S = <span class="kw">sizeof</span>(sensors) / <span class="kw">sizeof</span>(sensors[<span class="nm">0</span>]);
 <span class="kw">const float</span> OCCUPIED_CM = <span class="nm">10.0f</span>; <span class="cm">// distance below this = slot occupied</span>
+<span class="kw">bool</span> slotOccupied[NUM_S] = { <span class="kw">false</span>, <span class="kw">false</span>, <span class="kw">false</span> };
 
 <span class="cm">// ── RC522 — SPI2 default pins, no workaround needed ──</span>
 <span class="kw">#define</span> <span class="df">SPI_SCK</span>   <span class="nm">12</span>   <span class="cm">// SPI2 default on S3</span>
@@ -554,12 +574,20 @@
 <span class="kw">#define</span> <span class="df">LCD_ADDR</span>  <span class="nm">0x27</span>
 <span class="clean">LiquidCrystal_I2C lcd(LCD_ADDR, 16, 2);</span>
 
-<span class="cm">// ── Servo SG90 — gate barrier ─────────────────────────</span>
+<span class="cm">// ── IR sensor — exit lane obstacle detect ─────────────</span>
+<span class="kw">#define</span> <span class="df">IR_PIN</span> <span class="nm">40</span>
+<span class="kw">#define</span> <span class="df">IR_OBSTACLE_STATE</span> LOW  <span class="cm">// most IR modules pull LOW when blocked</span>
+
+<span class="cm">// ── Servo SG90 — shared entry/exit gate ───────────────</span>
 <span class="kw">#define</span> <span class="df">SERVO_PIN</span> <span class="nm">39</span>
 <span class="clean">Servo gate;</span>
 <span class="kw">const int</span> GATE_CLOSED = <span class="nm">0</span>;
 <span class="kw">const int</span> GATE_OPEN   = <span class="nm">90</span>;
 <span class="kw">const unsigned long</span> GATE_OPEN_MS = <span class="nm">3000</span>;
+
+<span class="kw">#if</span> ENABLE_BLYNK
+<span class="kw">unsigned long</span> lastBlynkPush = <span class="nm">0</span>;
+<span class="kw">#endif</span>
 
 <span class="cm">// ─────────────────────────────────────────────────────</span>
 <span class="kw">float</span> <span class="fn">readDistance</span>(<span class="kw">uint8_t</span> trig, <span class="kw">uint8_t</span> echo) {
@@ -575,6 +603,12 @@
   <span class="fn">delay</span>(GATE_OPEN_MS);
   gate.<span class="fn">write</span>(GATE_CLOSED);
 }
+
+<span class="kw">#if</span> ENABLE_BLYNK
+<span class="fn">BLYNK_WRITE</span>(V1) {
+  <span class="kw">if</span> (param.<span class="fn">asInt</span>()) <span class="fn">openGate</span>(); <span class="cm">// manual gate trigger from the app</span>
+}
+<span class="kw">#endif</span>
 
 <span class="kw">void</span> <span class="fn">setup</span>() {
   Serial.<span class="fn">begin</span>(<span class="nm">115200</span>);
@@ -593,6 +627,9 @@
     <span class="fn">pinMode</span>(sensors[i].greenPin, OUTPUT);
   }
 
+  <span class="cm">// IR exit sensor</span>
+  <span class="fn">pinMode</span>(IR_PIN, INPUT);
+
   <span class="cm">// I²C — no remap needed, IO8/IO9 are defaults on S3</span>
   <span class="clean">Wire.begin(LCD_SDA, LCD_SCL);</span>
   lcd.<span class="fn">init</span>();
@@ -603,17 +640,27 @@
   <span class="cm">// Servo gate — start closed</span>
   gate.<span class="fn">attach</span>(SERVO_PIN);
   gate.<span class="fn">write</span>(GATE_CLOSED);
+
+<span class="kw">#if</span> ENABLE_BLYNK
+  WiFi.<span class="fn">begin</span>(WIFI_SSID, WIFI_PASS);
+  Blynk.<span class="fn">config</span>(BLYNK_AUTH_TOKEN);
+  Blynk.<span class="fn">connect</span>();
+<span class="kw">#endif</span>
 }
 
 <span class="kw">void</span> <span class="fn">loop</span>() {
+<span class="kw">#if</span> ENABLE_BLYNK
+  Blynk.<span class="fn">run</span>();
+<span class="kw">#endif</span>
+
   <span class="kw">float</span> dist[NUM_S];
   <span class="kw">float</span> minDist = <span class="nm">9999</span>; <span class="kw">int</span> minIdx = <span class="nm">0</span>;
 
   <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; NUM_S; i++) {
     dist[i] = <span class="fn">readDistance</span>(sensors[i].trig, sensors[i].echo);
-    <span class="kw">bool</span> occupied = (dist[i] &gt; <span class="nm">0</span> &amp;&amp; dist[i] &lt; OCCUPIED_CM);
-    <span class="fn">digitalWrite</span>(sensors[i].redPin, occupied ? HIGH : LOW);
-    <span class="fn">digitalWrite</span>(sensors[i].greenPin, occupied ? LOW : HIGH);
+    slotOccupied[i] = (dist[i] &gt; <span class="nm">0</span> &amp;&amp; dist[i] &lt; OCCUPIED_CM);
+    <span class="fn">digitalWrite</span>(sensors[i].redPin, slotOccupied[i] ? HIGH : LOW);
+    <span class="fn">digitalWrite</span>(sensors[i].greenPin, slotOccupied[i] ? LOW : HIGH);
     <span class="kw">if</span> (dist[i] &gt; <span class="nm">0</span> &amp;&amp; dist[i] &lt; minDist) { minDist = dist[i]; minIdx = i; }
     Serial.<span class="fn">printf</span>(<span class="st">"[%s] %s cm\n"</span>, sensors[i].label,
                   dist[i] &lt; <span class="nm">0</span> ? <span class="st">"---"</span> : String(dist[i], <span class="nm">1</span>).c_str());
@@ -626,6 +673,7 @@
   <span class="kw">else</span>
     lcd.<span class="fn">print</span>(<span class="st">"No object       "</span>);
 
+  <span class="cm">// Entry — RFID, whitelist-gated</span>
   <span class="kw">if</span> (rfid.<span class="fn">PICC_IsNewCardPresent</span>() &amp;&amp; rfid.<span class="fn">PICC_ReadCardSerial</span>()) {
     String uid = <span class="st">""</span>;
     <span class="kw">for</span> (<span class="kw">byte</span> i = <span class="nm">0</span>; i &lt; rfid.uid.size; i++)
@@ -633,11 +681,30 @@
     uid.<span class="fn">toUpperCase</span>();
     Serial.<span class="fn">println</span>(<span class="st">"Card: "</span> + uid);
     lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>, <span class="nm">0</span>);
-    lcd.<span class="fn">print</span>(<span class="st">"UID:"</span> + uid + <span class="st">"        "</span>);
+    <span class="kw">if</span> (<span class="fn">isWhitelisted</span>(uid)) {
+      lcd.<span class="fn">print</span>(<span class="st">"Access OK       "</span>);
+      <span class="fn">openGate</span>();
+    } <span class="kw">else</span> {
+      lcd.<span class="fn">print</span>(<span class="st">"Access Denied   "</span>);
+    }
     rfid.<span class="fn">PICC_HaltA</span>();
     rfid.<span class="fn">PCD_StopCrypto1</span>();
+  }
+
+  <span class="cm">// Exit — IR sensor, no auth needed, opens the same shared gate</span>
+  <span class="kw">if</span> (<span class="fn">digitalRead</span>(IR_PIN) == IR_OBSTACLE_STATE) {
+    Serial.<span class="fn">println</span>(<span class="st">"Exit IR triggered"</span>);
     <span class="fn">openGate</span>();
   }
+
+<span class="kw">#if</span> ENABLE_BLYNK
+  <span class="kw">if</span> (<span class="fn">millis</span>() - lastBlynkPush &gt; <span class="nm">1000</span>) {
+    <span class="kw">int</span> freeSlots = <span class="nm">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; NUM_S; i++) <span class="kw">if</span> (!slotOccupied[i]) freeSlots++;
+    Blynk.<span class="fn">virtualWrite</span>(V0, freeSlots);
+    lastBlynkPush = <span class="fn">millis</span>();
+  }
+<span class="kw">#endif</span>
 
   <span class="fn">delay</span>(<span class="nm">200</span>);
 }</pre>
@@ -647,10 +714,12 @@
 <div class="sec">// Project files — view source on GitHub</div>
 <div class="grid3">
   <div class="card">
-    <div class="card-hd">📁 Arduino — main sketch</div>
+    <div class="card-hd">📁 Arduino — main sketch + config</div>
     <table>
       <tr><th>File</th><th>Purpose</th></tr>
       <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/main_system/main_system.ino" target="_blank" rel="noopener">main_system.ino</a></td><td class="nc">All devices + LEDs + servo</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/main_system/rfid_whitelist.h" target="_blank" rel="noopener">rfid_whitelist.h</a></td><td class="nc">Allowed card UIDs</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/main_system/blynk_config.h" target="_blank" rel="noopener">blynk_config.h</a></td><td class="nc">Optional Blynk IoT credentials</td></tr>
     </table>
   </div>
 
@@ -663,6 +732,7 @@
       <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_lcd/test_lcd.ino" target="_blank" rel="noopener">test_lcd.ino</a></td><td class="nc">LCD I²C</td></tr>
       <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_leds/test_leds.ino" target="_blank" rel="noopener">test_leds.ino</a></td><td class="nc">6× status LED</td></tr>
       <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_servo/test_servo.ino" target="_blank" rel="noopener">test_servo.ino</a></td><td class="nc">SG90 gate</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_ir/test_ir.ino" target="_blank" rel="noopener">test_ir.ino</a></td><td class="nc">IR exit sensor</td></tr>
     </table>
   </div>
 
