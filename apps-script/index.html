@@ -62,6 +62,10 @@
   .lt-blu{background:#0c1f3d;color:#79c0ff;border:1px solid #1f6feb;}
   pre { padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.73rem; line-height: 1.75; overflow-x: auto; color: #e6edf3; }
   .kw{color:#ff7b72;} .fn{color:#d2a8ff;} .nm{color:#79c0ff;} .cm{color:#8b949e;font-style:italic;} .st{color:#a5d6ff;} .tp{color:#ffa657;} .df{color:#3fb950;} .clean{color:#57ab5a;font-weight:600;}
+
+  /* file links */
+  a.file-link { color: #58a6ff; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+  a.file-link:hover { text-decoration: underline; }
 </style>
 
 <div style="text-align:center">
@@ -637,5 +641,38 @@
 
   <span class="fn">delay</span>(<span class="nm">200</span>);
 }</pre>
+</div>
+
+<!-- PROJECT FILE LINKS -->
+<div class="sec">// Project files — view source on GitHub</div>
+<div class="grid3">
+  <div class="card">
+    <div class="card-hd">📁 Arduino — main sketch</div>
+    <table>
+      <tr><th>File</th><th>Purpose</th></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/main_system/main_system.ino" target="_blank" rel="noopener">main_system.ino</a></td><td class="nc">All devices + LEDs + servo</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">🧪 Arduino — per-device tests</div>
+    <table>
+      <tr><th>File</th><th>Tests</th></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_hcsr04/test_hcsr04.ino" target="_blank" rel="noopener">test_hcsr04.ino</a></td><td class="nc">3× ultrasonic</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_rc522/test_rc522.ino" target="_blank" rel="noopener">test_rc522.ino</a></td><td class="nc">RFID reader</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_lcd/test_lcd.ino" target="_blank" rel="noopener">test_lcd.ino</a></td><td class="nc">LCD I²C</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_leds/test_leds.ino" target="_blank" rel="noopener">test_leds.ino</a></td><td class="nc">6× status LED</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/arduino/tests/test_servo/test_servo.ino" target="_blank" rel="noopener">test_servo.ino</a></td><td class="nc">SG90 gate</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">🌐 Google Apps Script port</div>
+    <table>
+      <tr><th>File</th><th>Purpose</th></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/apps-script/Code.gs" target="_blank" rel="noopener">Code.gs</a></td><td class="nc">doGet() web app entry</td></tr>
+      <tr><td><a class="file-link" href="https://github.com/EpanE/Simple-parking-system-4-yuni/blob/main/apps-script/index.html" target="_blank" rel="noopener">index.html</a></td><td class="nc">HtmlService template</td></tr>
+    </table>
+  </div>
 </div>
 
