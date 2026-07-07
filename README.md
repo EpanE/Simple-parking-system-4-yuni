@@ -3,6 +3,7 @@
 Smart parking demo built on a classic ESP32 NodeMCU-32S (WROOM-32, 38-pin devkit): 3 ultrasonic slot sensors, whitelisted RFID gate entry, an IR-triggered exit, an LCD status display, per-slot LED indicators, a shared servo barrier, and an optional Blynk IoT scaffold.
 
 **Live pinout doc:** https://epane.github.io/Simple-parking-system-4-yuni/
+**Live flow chart:** https://epane.github.io/Simple-parking-system-4-yuni/flowchart.html
 
 ## Hardware
 
@@ -37,6 +38,7 @@ All pins are VSPI/Wire hardware defaults on classic ESP32 — no HSPI remap, no 
 ```
 index.html                     full pinout doc (GitHub Pages site)
 nodemcu32s_full_system.html    duplicate of index.html (source copy)
+flowchart.html                 main_system.ino logic flow chart (GitHub Pages)
 arduino/
   main_system/
     main_system.ino    full integrated sketch — all devices + outputs
