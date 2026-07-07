@@ -1,6 +1,7 @@
-// ESP32-S3 DevKitC-1 — HC-SR04x3 + RC522 (whitelisted) + IR exit + LCD 16x2 I2C
+// ESP32 NodeMCU-32S (WROOM-32, 38-pin) — HC-SR04x3 + RC522 (whitelisted) + IR exit + LCD 16x2 I2C
 //                       + 6x status LED + shared SG90 gate + optional Blynk IoT
-// Cleaner than DEVKIT V1: no HSPI, no I2C remap, no GPIO12 concern
+// Zero workarounds: VSPI (18/19/23/5) and I2C (21/22) hardware defaults used as-is;
+// GPIO2 is the one strap pin used, LED-only, safe.
 
 #include "blynk_config.h"   // must come before any Blynk library include
 #if ENABLE_BLYNK
@@ -18,34 +19,34 @@
 // -- HC-SR04 + per-slot status LEDs --------------------
 struct Sensor { uint8_t trig; uint8_t echo; uint8_t redPin; uint8_t greenPin; const char* label; };
 const Sensor sensors[] = {
-  { 1, 2, 15, 18, "Front" },
-  { 4, 5, 16, 21, "Left"  },
-  { 6, 7, 17, 38, "Right" },
+  { 13, 34, 25, 2,  "Front" },
+  { 14, 35, 26, 16, "Left"  },
+  { 27, 36, 32, 17, "Right" },
 };
 const int NUM_S = sizeof(sensors) / sizeof(sensors[0]);
 const float OCCUPIED_CM = 10.0f; // distance below this = slot occupied
 bool slotOccupied[NUM_S] = { false, false, false };
 
-// -- RC522 -- SPI2 default pins, no workaround needed --
-#define SPI_SCK   12
-#define SPI_MISO  13
-#define SPI_MOSI  11
-#define RC_SS     10
-#define RC_RST    14
+// -- RC522 -- VSPI default pins (classic ESP32), no workaround needed --
+#define SPI_SCK   18
+#define SPI_MISO  19
+#define SPI_MOSI  23
+#define RC_SS     5
+#define RC_RST    4
 MFRC522 rfid(RC_SS, RC_RST);
 
-// -- LCD I2C -- default Wire pins on S3 ----------------
-#define LCD_SDA   8
-#define LCD_SCL   9
+// -- LCD I2C -- default Wire pins on classic ESP32 --------
+#define LCD_SDA   21
+#define LCD_SCL   22
 #define LCD_ADDR  0x27
 LiquidCrystal_I2C lcd(LCD_ADDR, 16, 2);
 
 // -- IR sensor -- exit lane obstacle detect -------------
-#define IR_PIN 40
+#define IR_PIN 39
 #define IR_OBSTACLE_STATE LOW  // most IR modules pull LOW when blocked — flip if inverted
 
 // -- Servo SG90 -- shared entry/exit gate ---------------
-#define SERVO_PIN 39
+#define SERVO_PIN 33
 Servo gate;
 const int GATE_CLOSED = 0;
 const int GATE_OPEN   = 90;
@@ -78,7 +79,7 @@ BLYNK_WRITE(V1) {
 void setup() {
   Serial.begin(115200);
 
-  // SPI2 -- direct, no HSPI class needed on S3
+  // VSPI -- direct, no HSPI class needed (classic ESP32 default)
   SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI, RC_SS);
   rfid.PCD_Init();
   Serial.println("RC522 ready");
@@ -95,7 +96,7 @@ void setup() {
   // IR exit sensor
   pinMode(IR_PIN, INPUT);
 
-  // I2C -- no remap needed, IO8/IO9 are defaults on S3
+  // I2C -- no remap needed, GPIO21/GPIO22 are Wire defaults on classic ESP32
   Wire.begin(LCD_SDA, LCD_SCL);
   lcd.init();
   lcd.backlight();

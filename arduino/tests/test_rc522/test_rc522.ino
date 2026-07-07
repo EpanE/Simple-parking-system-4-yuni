@@ -1,14 +1,14 @@
 // Test sketch — RC522 RFID only
-// SPI2 default pins on ESP32-S3, no workaround needed
+// VSPI default pins on classic ESP32, no workaround needed
 
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define SPI_SCK   12
-#define SPI_MISO  13
-#define SPI_MOSI  11
-#define RC_SS     10
-#define RC_RST    14
+#define SPI_SCK   18
+#define SPI_MISO  19
+#define SPI_MOSI  23
+#define RC_SS     5
+#define RC_RST    4
 MFRC522 rfid(RC_SS, RC_RST);
 
 void setup() {

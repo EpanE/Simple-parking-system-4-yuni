@@ -1,6 +1,6 @@
-# Simple Parking System — ESP32-S3 DevKitC-1
+# Simple Parking System — ESP32 NodeMCU-32S
 
-Smart parking demo built on an ESP32-S3 DevKitC-1: 3 ultrasonic slot sensors, whitelisted RFID gate entry, an IR-triggered exit, an LCD status display, per-slot LED indicators, a shared servo barrier, and an optional Blynk IoT scaffold.
+Smart parking demo built on a classic ESP32 NodeMCU-32S (WROOM-32, 38-pin devkit): 3 ultrasonic slot sensors, whitelisted RFID gate entry, an IR-triggered exit, an LCD status display, per-slot LED indicators, a shared servo barrier, and an optional Blynk IoT scaffold.
 
 **Live pinout doc:** https://epane.github.io/Simple-parking-system-4-yuni/
 
@@ -20,23 +20,23 @@ Smart parking demo built on an ESP32-S3 DevKitC-1: 3 ultrasonic slot sensors, wh
 
 | Function | GPIO |
 |---|---|
-| HC-SR04 #1 (Front) TRIG / ECHO | 1 / 2 |
-| HC-SR04 #2 (Left) TRIG / ECHO | 4 / 5 |
-| HC-SR04 #3 (Right) TRIG / ECHO | 6 / 7 |
-| LCD SDA / SCL | 8 / 9 |
-| RC522 SS / MOSI / SCK / MISO / RST | 10 / 11 / 12 / 13 / 14 |
-| Red LED — Front / Left / Right | 15 / 16 / 17 |
-| Green LED — Front / Left / Right | 18 / 21 / 38 |
-| Servo SG90 (gate) | 39 |
-| IR sensor (exit) | 40 |
+| HC-SR04 #1 (Front) TRIG / ECHO | 13 / 34 |
+| HC-SR04 #2 (Left) TRIG / ECHO | 14 / 35 |
+| HC-SR04 #3 (Right) TRIG / ECHO | 27 / 36 (VP) |
+| LCD SDA / SCL | 21 / 22 |
+| RC522 SS / MOSI / SCK / MISO / RST | 5 / 23 / 18 / 19 / 4 |
+| Red LED — Front / Left / Right | 25 / 26 / 32 |
+| Green LED — Front / Left / Right | 2 / 16 / 17 |
+| Servo SG90 (gate) | 33 |
+| IR sensor (exit) | 39 (VN) |
 
-All pins are SPI2/Wire defaults on the S3 — no HSPI workaround, no I²C remap, no GPIO12 boot conflict (unlike the original ESP32 DEVKIT V1). Full diagram, legend, and free-pin list are in the doc page above.
+All pins are VSPI/Wire hardware defaults on classic ESP32 — no HSPI remap, no I²C remap. GPIO2 is the one boot-strapping pin used, wired to a status LED only (idiomatic — many boards already tie an onboard LED to GPIO2), so it carries no functional risk. GPIO0/1/3/6–11/12/15 are avoided entirely. Every other usable GPIO on the 38-pin header is now committed — none left free for expansion. Full diagram, legend, and pin table are in the doc page above.
 
 ## Repo layout
 
 ```
 index.html                     full pinout doc (GitHub Pages site)
-s3_devkitc_full_system.html    duplicate of index.html (source copy)
+nodemcu32s_full_system.html    duplicate of index.html (source copy)
 arduino/
   main_system/
     main_system.ino    full integrated sketch — all devices + outputs
@@ -59,7 +59,7 @@ apps-script/
 
 ## Arduino setup
 
-Board: **ESP32S3 Dev Module** (esp32 by Espressif Systems core).
+Board: **ESP32 Dev Module** (esp32 by Espressif Systems core).
 
 Libraries (Arduino Library Manager):
 - `MFRC522`

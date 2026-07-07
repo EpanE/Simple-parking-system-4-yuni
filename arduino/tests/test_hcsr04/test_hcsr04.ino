@@ -3,9 +3,9 @@
 
 struct Sensor { uint8_t trig; uint8_t echo; const char* label; };
 const Sensor sensors[] = {
-  { 1, 2, "Front" },
-  { 4, 5, "Left"  },
-  { 6, 7, "Right" },
+  { 13, 34, "Front" },
+  { 14, 35, "Left"  },
+  { 27, 36, "Right" },
 };
 const int NUM_S = sizeof(sensors) / sizeof(sensors[0]);
 

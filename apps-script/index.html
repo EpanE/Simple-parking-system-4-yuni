@@ -7,32 +7,6 @@
   .subtitle { font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono', monospace; margin-top: 5px; }
   .sec { width: 100%; max-width: 980px; font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8b949e; padding-bottom: 6px; border-bottom: 1px solid #21262d; }
 
-  /* upgrade cards */
-  .upgrades { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 980px; }
-  @media (max-width: 660px) { .upgrades { grid-template-columns: 1fr; } }
-  .up-card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px 16px; }
-  .up-card.win { border-color: #238636; background: #0d1f0d; }
-  .up-title { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; margin-bottom: 8px; }
-  .up-card.win .up-title { color: #3fb950; }
-  .up-body { font-size: 0.78rem; color: #8b949e; line-height: 1.6; }
-  .up-body strong { color: #e6edf3; }
-  .strike { text-decoration: line-through; color: #6e7681; }
-
-  /* comparison table */
-  .cmp-wrap { width: 100%; max-width: 980px; background: #161b22; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
-  .cmp-wrap table { width: 100%; border-collapse: collapse; }
-  .cmp-wrap th { padding: 9px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: #21262d; border-bottom: 1px solid #30363d; }
-  .cmp-wrap th:nth-child(1) { color: #8b949e; }
-  .cmp-wrap th:nth-child(2) { color: #6e7681; text-align: center; }
-  .cmp-wrap th:nth-child(3) { color: #58a6ff; text-align: center; }
-  .cmp-wrap td { padding: 8px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; border-bottom: 1px solid #21262d; }
-  .cmp-wrap tr:last-child td { border-bottom: none; }
-  .cmp-wrap td:nth-child(2) { color: #6e7681; text-align: center; }
-  .cmp-wrap td:nth-child(3) { text-align: center; }
-  .better { color: #3fb950 !important; font-weight: 600; }
-  .same { color: #8b949e !important; }
-  .worse { color: #ff7b72 !important; }
-
   /* board diagram */
   .diagram-wrap { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 18px; width: 100%; max-width: 980px; }
   svg { width: 100%; height: auto; display: block; }
@@ -48,7 +22,6 @@
   tr:last-child td { border-bottom: none; }
   .bdg { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 0.67rem; font-weight: 700; }
   .b1{background:#3d1010;color:#ff7b72;} .b2{background:#0d2416;color:#3fb950;} .b3{background:#0c1f3d;color:#79c0ff;}
-  .br{background:#1e0b3d;color:#d2a8ff;} .bl{background:#062020;color:#39d353;}
   .pc{color:#e3b341;} .gc{color:#e6edf3;font-weight:600;} .nc{color:#8b949e;font-size:0.69rem;}
   .default-pin { color: #3fb950; font-size: 0.65rem; }
   .danger-row { background: #1a0808 !important; }
@@ -67,409 +40,343 @@
   a.file-link { color: #58a6ff; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
   a.file-link:hover { text-decoration: underline; }
 </style>
+</head>
+<body>
 
 <div style="text-align:center">
-  <h1>ESP32-S3 DevKitC-1 — Full System</h1>
+  <h1>ESP32 NodeMCU-32S — Full System</h1>
   <div class="subtitle">// HC-SR04×3 · RC522 · LCD 16×2 I²C · 6×LED · SG90 Servo &nbsp;|&nbsp; Zero workarounds needed</div>
 </div>
 
-<!-- UPGRADE HIGHLIGHTS -->
-<div class="sec">// Why S3 is cleaner for this project</div>
-<div class="upgrades">
-  <div class="up-card win">
-    <div class="up-title">🔌 No HSPI workaround</div>
-    <div class="up-body">DEVKIT V1 needed a custom <span class="strike">SPIClass hspi(HSPI)</span> because default SPI pins were taken by HC-SR04.<br><br>S3's default SPI2 (FSPI) pins <strong>GPIO10–13</strong> are all free. Use <code>SPI.begin()</code> directly.</div>
-  </div>
-  <div class="up-card win">
-    <div class="up-title">📡 No I²C remap</div>
-    <div class="up-body">DEVKIT V1 needed <span class="strike">Wire.begin(25, 26)</span> because GPIO21/22 were taken.<br><br>S3's I²C on <strong>GPIO8/9</strong> is completely free — clean default, no remap required.</div>
-  </div>
-  <div class="up-card win">
-    <div class="up-title">⚡ No boot pin landmine</div>
-    <div class="up-body">DEVKIT V1 had <span class="strike">GPIO12</span> causing boot failures when used as MISO.<br><br>S3 has no MTDI strapping issue. <strong>GPIO6–13 are all fully safe</strong> to use as regular I/O.</div>
-  </div>
-</div>
-
-<!-- COMPARISON TABLE -->
-<div class="sec">// DEVKIT V1 vs S3 DevKitC-1</div>
-<div class="cmp-wrap">
-  <table>
-    <tr><th>Feature</th><th>DEVKIT V1</th><th>S3 DevKitC-1</th></tr>
-    <tr><td class="pc">Core</td><td>2× Xtensa LX6</td><td class="better">2× Xtensa LX7 (+40%)</td></tr>
-    <tr><td class="pc">Clock</td><td>240 MHz</td><td class="same">240 MHz</td></tr>
-    <tr><td class="pc">Usable GPIOs</td><td>~22</td><td class="better">~36 safe GPIOs</td></tr>
-    <tr><td class="pc">GPIO6–11</td><td class="worse">Flash — DO NOT USE</td><td class="better">Fully usable I/O ✓</td></tr>
-    <tr><td class="pc">GPIO12 (MTDI)</td><td class="worse">Boot strapping — avoid</td><td class="better">Normal GPIO ✓</td></tr>
-    <tr><td class="pc">Default SPI pins</td><td class="worse">18,19,23 — all taken</td><td class="better">10,11,12,13 — free ✓</td></tr>
-    <tr><td class="pc">Default I²C pins</td><td class="worse">21,22 — both taken</td><td class="better">8,9 — free ✓</td></tr>
-    <tr><td class="pc">Workarounds needed</td><td class="worse">3 (HSPI, I²C remap, GPIO12)</td><td class="better">0 ✓</td></tr>
-    <tr><td class="pc">PSRAM</td><td>No (standard)</td><td class="better">Up to 8MB optional</td></tr>
-    <tr><td class="pc">USB OTG</td><td class="worse">No</td><td class="better">Yes (GPIO19/20)</td></tr>
-    <tr><td class="pc">3.3V logic</td><td class="same">Yes</td><td class="same">Yes — VD still needed for HC-SR04</td></tr>
-  </table>
-</div>
-
 <!-- BOARD PINOUT DIAGRAM -->
-<div class="sec">// ESP32-S3 DevKitC-1 — board pinout with usage overlay</div>
+<div class="sec">// ESP32 NodeMCU-32S — board pinout with usage overlay</div>
 <div class="diagram-wrap">
-<svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+<svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
   <defs>
     <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
       <circle cx="1" cy="1" r="0.65" fill="#21262d"/>
     </pattern>
   </defs>
-  <rect width="980" height="500" fill="url(#dots)" rx="8"/>
+  <rect width="980" height="480" fill="url(#dots)" rx="8"/>
 
-  <!-- ════ S3 BOARD BODY ════ -->
-  <!-- Wider board than DEVKIT V1 -->
-  <rect x="370" y="18" width="134" height="464" rx="8" fill="#1a2a0a" stroke="#3a5a0a" stroke-width="2"/>
-  <rect x="376" y="24" width="122" height="452" rx="5" fill="none" stroke="#2a4a0a" stroke-width="1"/>
+  <!-- ════ NODEMCU-32S BOARD BODY ════ -->
+  <rect x="370" y="18" width="134" height="430" rx="8" fill="#0a1a2a" stroke="#0a3a5a" stroke-width="2"/>
+  <rect x="376" y="24" width="122" height="418" rx="5" fill="none" stroke="#0a2a4a" stroke-width="1"/>
 
-  <!-- USB-C (top, for UART/power) -->
-  <rect x="393" y="10" width="40" height="20" rx="3" fill="#2d2d2d" stroke="#555" stroke-width="1"/>
-  <rect x="400" y="12" width="26" height="14" rx="2" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
-  <text x="413" y="22" text-anchor="middle" font-size="7" fill="#8b949e">USB-C</text>
+  <!-- Micro-USB (top, only port — no native USB on classic ESP32, goes through a UART bridge) -->
+  <rect x="399" y="8" width="28" height="18" rx="2" fill="#2d2d2d" stroke="#555" stroke-width="1"/>
+  <rect x="404" y="10" width="18" height="12" rx="1" fill="#1a1a1a" stroke="#555" stroke-width="1"/>
+  <text x="413" y="34" text-anchor="middle" font-size="6.5" fill="#8b949e">MICRO-USB</text>
 
-  <!-- USB (bottom, OTG) -->
-  <rect x="393" y="470" width="40" height="20" rx="3" fill="#2d2d2d" stroke="#555" stroke-width="1"/>
-  <rect x="400" y="472" width="26" height="14" rx="2" fill="#1a1a1a" stroke="#444" stroke-width="1"/>
-  <text x="413" y="483" text-anchor="middle" font-size="6.5" fill="#555">USB OTG</text>
-
-  <!-- ESP32-S3 module -->
-  <rect x="383" y="110" width="108" height="190" rx="3" fill="#0d1117" stroke="#238636" stroke-width="1"/>
-  <text x="437" y="198" text-anchor="middle" font-size="8" fill="#3fb950">ESP32-S3</text>
-  <text x="437" y="211" text-anchor="middle" font-size="7" fill="#8b949e">WROOM-1</text>
+  <!-- ESP32 WROOM-32 module -->
+  <rect x="383" y="110" width="108" height="190" rx="3" fill="#0d1117" stroke="#1f6feb" stroke-width="1"/>
+  <text x="437" y="198" text-anchor="middle" font-size="8" fill="#58a6ff">ESP32</text>
+  <text x="437" y="211" text-anchor="middle" font-size="7" fill="#8b949e">WROOM-32</text>
   <!-- antenna -->
   <rect x="404" y="110" width="66" height="18" rx="2" fill="#161b22" stroke="#30363d" stroke-width="1"/>
   <text x="437" y="122" text-anchor="middle" font-size="6.5" fill="#8b949e">ANTENNA</text>
 
+  <!-- EN button -->
+  <rect x="384" y="380" width="22" height="12" rx="2" fill="#1e2229" stroke="#58a6ff" stroke-width="1"/>
+  <text x="395" y="388.5" text-anchor="middle" font-size="6" fill="#58a6ff">EN</text>
   <!-- BOOT button -->
-  <rect x="384" y="332" width="18" height="10" rx="2" fill="#1e2229" stroke="#ffa657" stroke-width="1"/>
-  <text x="393" y="339.5" text-anchor="middle" font-size="6" fill="#ffa657">BOOT</text>
-  <!-- RST button -->
-  <rect x="472" y="332" width="18" height="10" rx="2" fill="#1e2229" stroke="#58a6ff" stroke-width="1"/>
-  <text x="481" y="339.5" text-anchor="middle" font-size="6" fill="#58a6ff">RST</text>
-  <!-- RGB LED -->
-  <circle cx="437" cy="380" r="5" fill="#0d2416" stroke="#39d353" stroke-width="1"/>
-  <text x="437" y="395" text-anchor="middle" font-size="6" fill="#8b949e">RGB LED</text>
-  <text x="437" y="403" text-anchor="middle" font-size="6" fill="#8b949e">GPIO48</text>
+  <rect x="468" y="380" width="22" height="12" rx="2" fill="#1e2229" stroke="#ffa657" stroke-width="1"/>
+  <text x="479" y="388.5" text-anchor="middle" font-size="6" fill="#ffa657">BOOT</text>
 
-  <!-- ════ LEFT COLUMN (right side of board, x=504) ════ -->
-  <!-- spacing: start y=38, step=22, 21 pins -->
+  <!-- ════ HEADER A (right side of board, x=504) ════ -->
+  <!-- spacing: start y=38, step=22, 19 pins -->
 
-  <!-- R1: GND -->
-  <circle cx="504" cy="38" r="4.5" fill="#1e2229" stroke="#8b949e" stroke-width="1.5"/>
-  <rect x="513" y="33" width="30" height="10" rx="2" fill="#1e2229" stroke="#8b949e" stroke-width="1"/>
-  <text x="528" y="40.5" text-anchor="middle" font-size="8" fill="#8b949e">GND</text>
-  <text x="547" y="40.5" font-size="7.5" fill="#30363d">common</text>
+  <!-- A1: 3V3 — RC522 VCC -->
+  <circle cx="504" cy="38" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
+  <rect x="513" y="33" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
+  <text x="528" y="40.5" text-anchor="middle" font-size="8" fill="#d2a8ff">3V3</text>
+  <text x="547" y="40.5" font-size="7.5" fill="#d2a8ff">→ RC522 VCC</text>
 
-  <!-- R2: IO43 TX ⚠ -->
-  <circle cx="504" cy="60" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="513" y="55" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="62.5" text-anchor="middle" font-size="8" fill="#ffa657">IO43</text>
-  <text x="547" y="62.5" font-size="7.5" fill="#ffa657">⚠ UART TX</text>
+  <!-- A2: EN -->
+  <circle cx="504" cy="60" r="4.5" fill="#1e2229" stroke="#58a6ff" stroke-width="1.5"/>
+  <rect x="513" y="55" width="30" height="10" rx="2" fill="#1e2229" stroke="#58a6ff" stroke-width="1"/>
+  <text x="528" y="62.5" text-anchor="middle" font-size="8" fill="#58a6ff">EN</text>
+  <text x="547" y="62.5" font-size="7.5" fill="#444c56">reset</text>
 
-  <!-- R3: IO44 RX ⚠ -->
-  <circle cx="504" cy="82" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="513" y="77" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="84.5" text-anchor="middle" font-size="8" fill="#ffa657">IO44</text>
-  <text x="547" y="84.5" font-size="7.5" fill="#ffa657">⚠ UART RX</text>
+  <!-- A3: IO36 (VP) — SR04 Right ECHO -->
+  <circle cx="504" cy="82" r="4.5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/>
+  <rect x="513" y="77" width="34" height="10" rx="2" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1"/>
+  <text x="530" y="84.5" text-anchor="middle" font-size="7.5" fill="#79c0ff">IO36/VP</text>
+  <text x="551" y="84.5" font-size="7.5" fill="#79c0ff">S3 ECHO (in-only)</text>
 
-  <!-- R4: IO1 — S1 TRIG -->
-  <circle cx="504" cy="104" r="4.5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/>
-  <rect x="513" y="99" width="30" height="10" rx="2" fill="#3d1010" stroke="#ff7b72" stroke-width="1"/>
-  <text x="528" y="106.5" text-anchor="middle" font-size="8" fill="#ff7b72">IO1</text>
-  <text x="547" y="106.5" font-size="7.5" fill="#ff7b72">S1 TRIG</text>
+  <!-- A4: IO39 (VN) — IR sensor exit -->
+  <circle cx="504" cy="104" r="4.5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/>
+  <rect x="513" y="99" width="34" height="10" rx="2" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1"/>
+  <text x="530" y="106.5" text-anchor="middle" font-size="7.5" fill="#c9e94a">IO39/VN</text>
+  <text x="551" y="106.5" font-size="7.5" fill="#c9e94a">IR exit (in-only)</text>
 
-  <!-- R5: IO2 — S1 ECHO -->
+  <!-- A5: IO34 — SR04 Front ECHO -->
   <circle cx="504" cy="126" r="4.5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/>
   <rect x="513" y="121" width="30" height="10" rx="2" fill="#3d1010" stroke="#ff7b72" stroke-width="1"/>
-  <text x="528" y="128.5" text-anchor="middle" font-size="8" fill="#ff7b72">IO2</text>
-  <text x="547" y="128.5" font-size="7.5" fill="#ff7b72">S1 ECHO (VD)</text>
+  <text x="528" y="128.5" text-anchor="middle" font-size="8" fill="#ff7b72">IO34</text>
+  <text x="547" y="128.5" font-size="7.5" fill="#ff7b72">S1 ECHO (in-only)</text>
 
-  <!-- R6: IO42 free -->
-  <circle cx="504" cy="148" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="143" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="150.5" text-anchor="middle" font-size="8" fill="#6e7681">IO42</text>
-  <text x="547" y="150.5" font-size="7.5" fill="#444c56">free</text>
+  <!-- A6: IO35 — SR04 Left ECHO -->
+  <circle cx="504" cy="148" r="4.5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/>
+  <rect x="513" y="143" width="30" height="10" rx="2" fill="#0c2a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="528" y="150.5" text-anchor="middle" font-size="8" fill="#3fb950">IO35</text>
+  <text x="547" y="150.5" font-size="7.5" fill="#3fb950">S2 ECHO (in-only)</text>
 
-  <!-- R7: IO41 free -->
-  <circle cx="504" cy="170" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="165" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="172.5" text-anchor="middle" font-size="8" fill="#6e7681">IO41</text>
-  <text x="547" y="172.5" font-size="7.5" fill="#444c56">free</text>
+  <!-- A7: IO32 — RED LED Right -->
+  <circle cx="504" cy="170" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
+  <rect x="513" y="165" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
+  <text x="528" y="172.5" text-anchor="middle" font-size="8" fill="#f85149">IO32</text>
+  <text x="547" y="172.5" font-size="7.5" fill="#f85149">RED LED Right</text>
 
-  <!-- R8: IO40 — IR sensor (exit) -->
-  <circle cx="504" cy="192" r="4.5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/>
-  <rect x="513" y="187" width="30" height="10" rx="2" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1"/>
-  <text x="528" y="194.5" text-anchor="middle" font-size="8" fill="#c9e94a">IO40</text>
-  <text x="547" y="194.5" font-size="7.5" fill="#c9e94a">IR sensor (exit)</text>
+  <!-- A8: IO33 — SERVO gate -->
+  <circle cx="504" cy="192" r="4.5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/>
+  <rect x="513" y="187" width="30" height="10" rx="2" fill="#2d0a1f" stroke="#db61a2" stroke-width="1"/>
+  <text x="528" y="194.5" text-anchor="middle" font-size="8" fill="#db61a2">IO33</text>
+  <text x="547" y="194.5" font-size="7.5" fill="#db61a2">SERVO gate</text>
 
-  <!-- R9: IO39 — SERVO SG90 gate -->
-  <circle cx="504" cy="214" r="4.5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/>
-  <rect x="513" y="209" width="30" height="10" rx="2" fill="#2d0a1f" stroke="#db61a2" stroke-width="1"/>
-  <text x="528" y="216.5" text-anchor="middle" font-size="8" fill="#db61a2">IO39</text>
-  <text x="547" y="216.5" font-size="7.5" fill="#db61a2">SERVO gate</text>
+  <!-- A9: IO25 — RED LED Front -->
+  <circle cx="504" cy="214" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
+  <rect x="513" y="209" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
+  <text x="528" y="216.5" text-anchor="middle" font-size="8" fill="#f85149">IO25</text>
+  <text x="547" y="216.5" font-size="7.5" fill="#f85149">RED LED Front</text>
 
-  <!-- R10: IO38 — GREEN LED Slot Right -->
-  <circle cx="504" cy="236" r="4.5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
-  <rect x="513" y="231" width="30" height="10" rx="2" fill="#0a2d10" stroke="#56d364" stroke-width="1"/>
-  <text x="528" y="238.5" text-anchor="middle" font-size="8" fill="#56d364">IO38</text>
-  <text x="547" y="238.5" font-size="7.5" fill="#56d364">GREEN LED Right</text>
+  <!-- A10: IO26 — RED LED Left -->
+  <circle cx="504" cy="236" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
+  <rect x="513" y="231" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
+  <text x="528" y="238.5" text-anchor="middle" font-size="8" fill="#f85149">IO26</text>
+  <text x="547" y="238.5" font-size="7.5" fill="#f85149">RED LED Left</text>
 
-  <!-- R11: IO37 ⚠ PSRAM on some -->
-  <circle cx="504" cy="258" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <rect x="513" y="253" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="260.5" text-anchor="middle" font-size="8" fill="#ffa657">IO37</text>
-  <text x="547" y="260.5" font-size="7.5" fill="#ffa657">⚠ PSRAM variant</text>
+  <!-- A11: IO27 — SR04 Right TRIG -->
+  <circle cx="504" cy="258" r="4.5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/>
+  <rect x="513" y="253" width="30" height="10" rx="2" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1"/>
+  <text x="528" y="260.5" text-anchor="middle" font-size="8" fill="#79c0ff">IO27</text>
+  <text x="547" y="260.5" font-size="7.5" fill="#79c0ff">S3 TRIG</text>
 
-  <!-- R12: IO36 ⚠ PSRAM on some -->
-  <circle cx="504" cy="280" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <rect x="513" y="275" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="282.5" text-anchor="middle" font-size="8" fill="#ffa657">IO36</text>
-  <text x="547" y="282.5" font-size="7.5" fill="#ffa657">⚠ PSRAM variant</text>
+  <!-- A12: IO14 — SR04 Left TRIG -->
+  <circle cx="504" cy="280" r="4.5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/>
+  <rect x="513" y="275" width="30" height="10" rx="2" fill="#0c2a1a" stroke="#3fb950" stroke-width="1"/>
+  <text x="528" y="282.5" text-anchor="middle" font-size="8" fill="#3fb950">IO14</text>
+  <text x="547" y="282.5" font-size="7.5" fill="#3fb950">S2 TRIG</text>
 
-  <!-- R13: IO35 ⚠ PSRAM on some -->
+  <!-- A13: IO12 ⚠ strap avoid -->
   <circle cx="504" cy="302" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
   <rect x="513" y="297" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="304.5" text-anchor="middle" font-size="8" fill="#ffa657">IO35</text>
-  <text x="547" y="304.5" font-size="7.5" fill="#ffa657">⚠ PSRAM variant</text>
+  <text x="528" y="304.5" text-anchor="middle" font-size="8" fill="#ffa657">IO12</text>
+  <text x="547" y="304.5" font-size="7.5" fill="#ffa657">⚠ strap — avoid</text>
 
-  <!-- R14: IO0 ⚠ BOOT -->
-  <circle cx="504" cy="324" r="4.5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/>
-  <rect x="513" y="319" width="30" height="10" rx="2" fill="#3d1010" stroke="#ff7b72" stroke-width="1"/>
-  <text x="528" y="326.5" text-anchor="middle" font-size="8" fill="#ff7b72">IO0</text>
-  <text x="547" y="326.5" font-size="7.5" fill="#ff7b72">⚠ BOOT btn</text>
+  <!-- A14: GND -->
+  <circle cx="504" cy="324" r="4.5" fill="#1e2229" stroke="#8b949e" stroke-width="1.5"/>
+  <rect x="513" y="319" width="30" height="10" rx="2" fill="#1e2229" stroke="#8b949e" stroke-width="1"/>
+  <text x="528" y="326.5" text-anchor="middle" font-size="8" fill="#8b949e">GND</text>
+  <text x="547" y="326.5" font-size="7.5" fill="#444c56">common</text>
 
-  <!-- R15: IO45 free -->
-  <circle cx="504" cy="346" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="341" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="348.5" text-anchor="middle" font-size="8" fill="#6e7681">IO45</text>
-  <text x="547" y="348.5" font-size="7.5" fill="#444c56">free</text>
+  <!-- A15: IO13 — SR04 Front TRIG -->
+  <circle cx="504" cy="346" r="4.5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/>
+  <rect x="513" y="341" width="30" height="10" rx="2" fill="#3d1010" stroke="#ff7b72" stroke-width="1"/>
+  <text x="528" y="348.5" text-anchor="middle" font-size="8" fill="#ff7b72">IO13</text>
+  <text x="547" y="348.5" font-size="7.5" fill="#ff7b72">S1 TRIG</text>
 
-  <!-- R16: IO48 RGB LED -->
-  <circle cx="504" cy="368" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="363" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="370.5" text-anchor="middle" font-size="8" fill="#6e7681">IO48</text>
-  <text x="547" y="370.5" font-size="7.5" fill="#444c56">RGB LED</text>
+  <!-- A16: IO9 ⚠ flash -->
+  <circle cx="504" cy="368" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="513" y="363" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="528" y="370.5" text-anchor="middle" font-size="8" fill="#ffa657">IO9</text>
+  <text x="547" y="370.5" font-size="7.5" fill="#ffa657">⚠ flash (SD2)</text>
 
-  <!-- R17: IO47 free -->
-  <circle cx="504" cy="390" r="4.5" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <rect x="513" y="385" width="30" height="10" rx="2" fill="#21262d" stroke="#30363d" stroke-width="1"/>
-  <text x="528" y="392.5" text-anchor="middle" font-size="8" fill="#6e7681">IO47</text>
-  <text x="547" y="392.5" font-size="7.5" fill="#444c56">free</text>
+  <!-- A17: IO10 ⚠ flash -->
+  <circle cx="504" cy="390" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="513" y="385" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="528" y="392.5" text-anchor="middle" font-size="8" fill="#ffa657">IO10</text>
+  <text x="547" y="392.5" font-size="7.5" fill="#ffa657">⚠ flash (SD3)</text>
 
-  <!-- R18: IO21 — GREEN LED Slot Left -->
-  <circle cx="504" cy="412" r="4.5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
-  <rect x="513" y="407" width="30" height="10" rx="2" fill="#0a2d10" stroke="#56d364" stroke-width="1"/>
-  <text x="528" y="414.5" text-anchor="middle" font-size="8" fill="#56d364">IO21</text>
-  <text x="547" y="414.5" font-size="7.5" fill="#56d364">GREEN LED Left</text>
+  <!-- A18: IO11 ⚠ flash -->
+  <circle cx="504" cy="412" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="513" y="407" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="528" y="414.5" text-anchor="middle" font-size="8" fill="#ffa657">IO11</text>
+  <text x="547" y="414.5" font-size="7.5" fill="#ffa657">⚠ flash (CMD)</text>
 
-  <!-- R19: IO20 USB D- ⚠ -->
-  <circle cx="504" cy="434" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="513" y="429" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="436.5" text-anchor="middle" font-size="8" fill="#ffa657">IO20</text>
-  <text x="547" y="436.5" font-size="7.5" fill="#ffa657">⚠ USB D-</text>
+  <!-- A19: 5V -->
+  <circle cx="504" cy="434" r="4.5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/>
+  <rect x="513" y="429" width="30" height="10" rx="2" fill="#3d1a10" stroke="#ffa657" stroke-width="1"/>
+  <text x="528" y="436.5" text-anchor="middle" font-size="8" fill="#ffa657">5V</text>
+  <text x="547" y="436.5" font-size="7.5" fill="#ffa657">HC-SR04/LCD/servo</text>
 
-  <!-- R20: IO19 USB D+ ⚠ -->
-  <circle cx="504" cy="456" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="513" y="451" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="528" y="458.5" text-anchor="middle" font-size="8" fill="#ffa657">IO19</text>
-  <text x="547" y="458.5" font-size="7.5" fill="#ffa657">⚠ USB D+</text>
+  <!-- ════ HEADER B (left side of board, x=370) ════ -->
 
-  <!-- R21: GND -->
-  <circle cx="504" cy="478" r="4.5" fill="#1e2229" stroke="#8b949e" stroke-width="1.5"/>
-  <rect x="513" y="473" width="30" height="10" rx="2" fill="#1e2229" stroke="#8b949e" stroke-width="1"/>
-  <text x="528" y="480.5" text-anchor="middle" font-size="8" fill="#8b949e">GND</text>
-
-  <!-- ════ RIGHT COLUMN (left side of board, x=370) ════ -->
-
-  <!-- L1: GND -->
+  <!-- B1: GND -->
   <circle cx="370" cy="38" r="4.5" fill="#1e2229" stroke="#8b949e" stroke-width="1.5"/>
   <rect x="330" y="33" width="30" height="10" rx="2" fill="#1e2229" stroke="#8b949e" stroke-width="1"/>
   <text x="345" y="40.5" text-anchor="middle" font-size="8" fill="#8b949e">GND</text>
 
-  <!-- L2: 3V3 -->
+  <!-- B2: IO23 — RC522 MOSI -->
   <circle cx="370" cy="60" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
   <rect x="330" y="55" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="62.5" text-anchor="middle" font-size="8" fill="#d2a8ff">3V3</text>
-  <text x="325" y="62.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 VCC ←</text>
+  <text x="345" y="62.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO23</text>
+  <text x="325" y="62.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 MOSI ←</text>
 
-  <!-- L3: RST/EN -->
-  <circle cx="370" cy="82" r="4.5" fill="#1e2229" stroke="#58a6ff" stroke-width="1.5"/>
-  <rect x="330" y="77" width="30" height="10" rx="2" fill="#1e2229" stroke="#58a6ff" stroke-width="1"/>
-  <text x="345" y="84.5" text-anchor="middle" font-size="8" fill="#58a6ff">RST</text>
+  <!-- B3: IO22 — LCD SCL -->
+  <circle cx="370" cy="82" r="4.5" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
+  <rect x="330" y="77" width="30" height="10" rx="2" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
+  <text x="345" y="84.5" text-anchor="middle" font-size="8" fill="#39d353" font-weight="700">IO22</text>
+  <text x="325" y="84.5" text-anchor="end" font-size="7.5" fill="#39d353">LCD SCL (default) ←</text>
 
-  <!-- L4: IO4 — S2 TRIG -->
-  <circle cx="370" cy="104" r="4.5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/>
-  <rect x="330" y="99" width="30" height="10" rx="2" fill="#0c2a1a" stroke="#3fb950" stroke-width="1"/>
-  <text x="345" y="106.5" text-anchor="middle" font-size="8" fill="#3fb950">IO4</text>
-  <text x="325" y="106.5" text-anchor="end" font-size="7.5" fill="#3fb950">S2 TRIG ←</text>
+  <!-- B4: IO1/TX0 ⚠ UART -->
+  <circle cx="370" cy="104" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="99" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="106.5" text-anchor="middle" font-size="8" fill="#ffa657">IO1</text>
+  <text x="325" y="106.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ UART0 TX ←</text>
 
-  <!-- L5: IO5 — S2 ECHO -->
-  <circle cx="370" cy="126" r="4.5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/>
-  <rect x="330" y="121" width="30" height="10" rx="2" fill="#0c2a1a" stroke="#3fb950" stroke-width="1"/>
-  <text x="345" y="128.5" text-anchor="middle" font-size="8" fill="#3fb950">IO5</text>
-  <text x="325" y="128.5" text-anchor="end" font-size="7.5" fill="#3fb950">S2 ECHO (VD) ←</text>
+  <!-- B5: IO3/RX0 ⚠ UART -->
+  <circle cx="370" cy="126" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="121" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="128.5" text-anchor="middle" font-size="8" fill="#ffa657">IO3</text>
+  <text x="325" y="128.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ UART0 RX ←</text>
 
-  <!-- L6: IO6 — S3 TRIG -->
-  <circle cx="370" cy="148" r="4.5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/>
-  <rect x="330" y="143" width="30" height="10" rx="2" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1"/>
-  <text x="345" y="150.5" text-anchor="middle" font-size="8" fill="#79c0ff">IO6</text>
-  <text x="325" y="150.5" text-anchor="end" font-size="7.5" fill="#79c0ff">S3 TRIG ←</text>
+  <!-- B6: IO21 — LCD SDA -->
+  <circle cx="370" cy="148" r="4.5" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
+  <rect x="330" y="143" width="30" height="10" rx="2" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
+  <text x="345" y="150.5" text-anchor="middle" font-size="8" fill="#39d353" font-weight="700">IO21</text>
+  <text x="325" y="150.5" text-anchor="end" font-size="7.5" fill="#39d353">LCD SDA (default) ←</text>
 
-  <!-- L7: IO7 — S3 ECHO -->
-  <circle cx="370" cy="170" r="4.5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/>
-  <rect x="330" y="165" width="30" height="10" rx="2" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1"/>
-  <text x="345" y="172.5" text-anchor="middle" font-size="8" fill="#79c0ff">IO7</text>
-  <text x="325" y="172.5" text-anchor="end" font-size="7.5" fill="#79c0ff">S3 ECHO (VD) ←</text>
+  <!-- B7: GND -->
+  <circle cx="370" cy="170" r="4.5" fill="#1e2229" stroke="#8b949e" stroke-width="1.5"/>
+  <rect x="330" y="165" width="30" height="10" rx="2" fill="#1e2229" stroke="#8b949e" stroke-width="1"/>
+  <text x="345" y="172.5" text-anchor="middle" font-size="8" fill="#8b949e">GND</text>
 
-  <!-- L8: IO15 — RED LED Slot Front -->
-  <circle cx="370" cy="192" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
-  <rect x="330" y="187" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
-  <text x="345" y="194.5" text-anchor="middle" font-size="8" fill="#f85149">IO15</text>
-  <text x="325" y="194.5" text-anchor="end" font-size="7.5" fill="#f85149">RED LED Front ←</text>
+  <!-- B8: IO19 — RC522 MISO -->
+  <circle cx="370" cy="192" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
+  <rect x="330" y="187" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
+  <text x="345" y="194.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO19</text>
+  <text x="325" y="194.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 MISO ←</text>
 
-  <!-- L9: IO16 — RED LED Slot Left -->
-  <circle cx="370" cy="214" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
-  <rect x="330" y="209" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
-  <text x="345" y="216.5" text-anchor="middle" font-size="8" fill="#f85149">IO16</text>
-  <text x="325" y="216.5" text-anchor="end" font-size="7.5" fill="#f85149">RED LED Left ←</text>
+  <!-- B9: IO18 — RC522 SCK -->
+  <circle cx="370" cy="214" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
+  <rect x="330" y="209" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
+  <text x="345" y="216.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO18</text>
+  <text x="325" y="216.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 SCK ←</text>
 
-  <!-- L10: IO17 — RED LED Slot Right -->
-  <circle cx="370" cy="236" r="4.5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/>
-  <rect x="330" y="231" width="30" height="10" rx="2" fill="#2d0a0a" stroke="#f85149" stroke-width="1"/>
-  <text x="345" y="238.5" text-anchor="middle" font-size="8" fill="#f85149">IO17</text>
-  <text x="325" y="238.5" text-anchor="end" font-size="7.5" fill="#f85149">RED LED Right ←</text>
+  <!-- B10: IO5 — RC522 SS -->
+  <circle cx="370" cy="236" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
+  <rect x="330" y="231" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
+  <text x="345" y="238.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO5</text>
+  <text x="325" y="238.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 SS ←</text>
 
-  <!-- L11: IO18 — GREEN LED Slot Front -->
+  <!-- B11: IO17 — GREEN LED Right -->
   <circle cx="370" cy="258" r="4.5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
   <rect x="330" y="253" width="30" height="10" rx="2" fill="#0a2d10" stroke="#56d364" stroke-width="1"/>
-  <text x="345" y="260.5" text-anchor="middle" font-size="8" fill="#56d364">IO18</text>
-  <text x="325" y="260.5" text-anchor="end" font-size="7.5" fill="#56d364">GREEN LED Front ←</text>
+  <text x="345" y="260.5" text-anchor="middle" font-size="8" fill="#56d364">IO17</text>
+  <text x="325" y="260.5" text-anchor="end" font-size="7.5" fill="#56d364">GREEN LED Right ←</text>
 
-  <!-- L12: IO8 — LCD SDA -->
-  <circle cx="370" cy="280" r="4.5" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
-  <rect x="330" y="275" width="30" height="10" rx="2" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
-  <text x="345" y="282.5" text-anchor="middle" font-size="8" fill="#39d353" font-weight="700">IO8</text>
-  <text x="325" y="282.5" text-anchor="end" font-size="7.5" fill="#39d353">LCD SDA ←</text>
+  <!-- B12: IO16 — GREEN LED Left -->
+  <circle cx="370" cy="280" r="4.5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
+  <rect x="330" y="275" width="30" height="10" rx="2" fill="#0a2d10" stroke="#56d364" stroke-width="1"/>
+  <text x="345" y="282.5" text-anchor="middle" font-size="8" fill="#56d364">IO16</text>
+  <text x="325" y="282.5" text-anchor="end" font-size="7.5" fill="#56d364">GREEN LED Left ←</text>
 
-  <!-- L13: IO3 ⚠ strapping -->
-  <circle cx="370" cy="302" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="330" y="297" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="345" y="304.5" text-anchor="middle" font-size="8" fill="#ffa657">IO3</text>
-  <text x="325" y="304.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ strapping ←</text>
+  <!-- B13: IO4 — RC522 RST -->
+  <circle cx="370" cy="302" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
+  <rect x="330" y="297" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
+  <text x="345" y="304.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO4</text>
+  <text x="325" y="304.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 RST ←</text>
 
-  <!-- L14: IO46 ⚠ strapping input only -->
-  <circle cx="370" cy="324" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/>
+  <!-- B14: IO0 ⚠ BOOT strap -->
+  <circle cx="370" cy="324" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
   <rect x="330" y="319" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
-  <text x="345" y="326.5" text-anchor="middle" font-size="8" fill="#ffa657">IO46</text>
-  <text x="325" y="326.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ input-only ←</text>
+  <text x="345" y="326.5" text-anchor="middle" font-size="8" fill="#ffa657">IO0</text>
+  <text x="325" y="326.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ BOOT strap ←</text>
 
-  <!-- L15: IO9 — LCD SCL -->
-  <circle cx="370" cy="346" r="4.5" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
-  <rect x="330" y="341" width="30" height="10" rx="2" fill="#062020" stroke="#39d353" stroke-width="1.5"/>
-  <text x="345" y="348.5" text-anchor="middle" font-size="8" fill="#39d353" font-weight="700">IO9</text>
-  <text x="325" y="348.5" text-anchor="end" font-size="7.5" fill="#39d353">LCD SCL ←</text>
+  <!-- B15: IO2 — GREEN LED Front (strap pin, LED-safe exception) -->
+  <circle cx="370" cy="346" r="4.5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
+  <rect x="330" y="341" width="30" height="10" rx="2" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/>
+  <text x="345" y="348.5" text-anchor="middle" font-size="8" fill="#56d364" font-weight="700">IO2</text>
+  <text x="325" y="348.5" text-anchor="end" font-size="7.5" fill="#56d364">💡 GREEN LED Front ←</text>
 
-  <!-- L16: IO10 — RC522 SS -->
-  <circle cx="370" cy="368" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
-  <rect x="330" y="363" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="370.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO10</text>
-  <text x="325" y="370.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 SS ←</text>
+  <!-- B16: IO15 ⚠ strap avoid -->
+  <circle cx="370" cy="368" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="363" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="370.5" text-anchor="middle" font-size="8" fill="#ffa657">IO15</text>
+  <text x="325" y="370.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ strap — avoid ←</text>
 
-  <!-- L17: IO11 — RC522 MOSI -->
-  <circle cx="370" cy="390" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
-  <rect x="330" y="385" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="392.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO11</text>
-  <text x="325" y="392.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 MOSI ←</text>
+  <!-- B17: IO8 ⚠ flash -->
+  <circle cx="370" cy="390" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="385" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="392.5" text-anchor="middle" font-size="8" fill="#ffa657">IO8</text>
+  <text x="325" y="392.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ flash (SD1) ←</text>
 
-  <!-- L18: IO12 — RC522 SCK -->
-  <circle cx="370" cy="412" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
-  <rect x="330" y="407" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="414.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO12</text>
-  <text x="325" y="414.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 SCK ←</text>
+  <!-- B18: IO7 ⚠ flash -->
+  <circle cx="370" cy="412" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="407" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="414.5" text-anchor="middle" font-size="8" fill="#ffa657">IO7</text>
+  <text x="325" y="414.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ flash (SD0) ←</text>
 
-  <!-- L19: IO13 — RC522 MISO -->
-  <circle cx="370" cy="434" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
-  <rect x="330" y="429" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="436.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO13</text>
-  <text x="325" y="436.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 MISO ←</text>
-
-  <!-- L20: RC522 RST on IO14 (shown separately) -->
-  <circle cx="370" cy="456" r="4.5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/>
-  <rect x="330" y="451" width="30" height="10" rx="2" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1"/>
-  <text x="345" y="458.5" text-anchor="middle" font-size="8" fill="#d2a8ff">IO14</text>
-  <text x="325" y="458.5" text-anchor="end" font-size="7.5" fill="#d2a8ff">RC522 RST ←</text>
-
-  <!-- L21: VIN -->
-  <circle cx="370" cy="478" r="4.5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/>
-  <rect x="330" y="473" width="30" height="10" rx="2" fill="#3d1a10" stroke="#ffa657" stroke-width="1"/>
-  <text x="345" y="480.5" text-anchor="middle" font-size="8" fill="#ffa657">VIN</text>
-  <text x="325" y="480.5" text-anchor="end" font-size="7.5" fill="#ffa657">5V (HC-SR04, LCD) ←</text>
+  <!-- B19: IO6 ⚠ flash -->
+  <circle cx="370" cy="434" r="4.5" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <rect x="330" y="429" width="30" height="10" rx="2" fill="#2d1800" stroke="#ffa657" stroke-width="1"/>
+  <text x="345" y="436.5" text-anchor="middle" font-size="8" fill="#ffa657">IO6</text>
+  <text x="325" y="436.5" text-anchor="end" font-size="7.5" fill="#ffa657">⚠ flash (CLK) ←</text>
 
   <!-- ════ LEGEND (right panel) ════ -->
-  <rect x="620" y="14" width="342" height="220" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <rect x="620" y="14" width="342" height="204" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
   <text x="791" y="29" text-anchor="middle" font-size="8.5" font-weight="700" fill="#8b949e" letter-spacing="1">PIN LEGEND</text>
-  <circle cx="636" cy="44" r="5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/><text x="648" y="47" font-size="8" fill="#ff7b72">HC-SR04 #1 (IO1, IO2)</text>
-  <circle cx="636" cy="60" r="5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/><text x="648" y="63" font-size="8" fill="#3fb950">HC-SR04 #2 (IO4, IO5)</text>
-  <circle cx="636" cy="76" r="5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/><text x="648" y="79" font-size="8" fill="#79c0ff">HC-SR04 #3 (IO6, IO7)</text>
-  <circle cx="636" cy="92" r="5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/><text x="648" y="95" font-size="8" fill="#d2a8ff">RC522 SPI2 (IO10–13, IO14 RST)</text>
-  <circle cx="636" cy="108" r="5" fill="#062020" stroke="#39d353" stroke-width="1.5"/><text x="648" y="111" font-size="8" fill="#39d353">LCD I²C (IO8 SDA, IO9 SCL)</text>
-  <circle cx="636" cy="124" r="5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/><text x="648" y="127" font-size="8" fill="#f85149">Red LED ×3 (IO15, 16, 17)</text>
-  <circle cx="636" cy="140" r="5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/><text x="648" y="143" font-size="8" fill="#56d364">Green LED ×3 (IO18, 21, 38)</text>
-  <circle cx="636" cy="156" r="5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/><text x="648" y="159" font-size="8" fill="#db61a2">Servo SG90 gate (IO39)</text>
-  <circle cx="636" cy="172" r="5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/><text x="648" y="175" font-size="8" fill="#c9e94a">IR sensor — exit (IO40)</text>
-  <circle cx="636" cy="188" r="5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="191" font-size="8" fill="#ffa657">Power (VIN / 3V3 / GND)</text>
-  <circle cx="636" cy="204" r="5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="207" font-size="8" fill="#ffa657">⚠ Boot/USB/strapping — avoid</text>
-  <circle cx="636" cy="220" r="5" fill="#21262d" stroke="#30363d" stroke-width="1"/><text x="648" y="223" font-size="8" fill="#6e7681">Free GPIO</text>
+  <circle cx="636" cy="44" r="5" fill="#3d1010" stroke="#ff7b72" stroke-width="1.5"/><text x="648" y="47" font-size="8" fill="#ff7b72">HC-SR04 #1 (IO13, IO34)</text>
+  <circle cx="636" cy="60" r="5" fill="#0c2a1a" stroke="#3fb950" stroke-width="1.5"/><text x="648" y="63" font-size="8" fill="#3fb950">HC-SR04 #2 (IO14, IO35)</text>
+  <circle cx="636" cy="76" r="5" fill="#0c1f3d" stroke="#79c0ff" stroke-width="1.5"/><text x="648" y="79" font-size="8" fill="#79c0ff">HC-SR04 #3 (IO27, IO36)</text>
+  <circle cx="636" cy="92" r="5" fill="#2d0d3d" stroke="#d2a8ff" stroke-width="1.5"/><text x="648" y="95" font-size="8" fill="#d2a8ff">RC522 VSPI (IO18,19,23,5 + RST 4)</text>
+  <circle cx="636" cy="108" r="5" fill="#062020" stroke="#39d353" stroke-width="1.5"/><text x="648" y="111" font-size="8" fill="#39d353">LCD I²C (IO21 SDA, IO22 SCL)</text>
+  <circle cx="636" cy="124" r="5" fill="#2d0a0a" stroke="#f85149" stroke-width="1.5"/><text x="648" y="127" font-size="8" fill="#f85149">Red LED ×3 (IO25, 26, 32)</text>
+  <circle cx="636" cy="140" r="5" fill="#0a2d10" stroke="#56d364" stroke-width="1.5"/><text x="648" y="143" font-size="8" fill="#56d364">Green LED ×3 (IO2, 16, 17)</text>
+  <circle cx="636" cy="156" r="5" fill="#2d0a1f" stroke="#db61a2" stroke-width="1.5"/><text x="648" y="159" font-size="8" fill="#db61a2">Servo SG90 gate (IO33)</text>
+  <circle cx="636" cy="172" r="5" fill="#1f2d0a" stroke="#c9e94a" stroke-width="1.5"/><text x="648" y="175" font-size="8" fill="#c9e94a">IR sensor — exit (IO39)</text>
+  <circle cx="636" cy="188" r="5" fill="#3d1a10" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="191" font-size="8" fill="#ffa657">Power (5V / 3V3 / GND / EN)</text>
+  <circle cx="636" cy="204" r="5" fill="#2d1800" stroke="#ffa657" stroke-width="1.5"/><text x="648" y="207" font-size="8" fill="#ffa657">⚠ Boot/UART/flash — avoid</text>
 
   <!-- GPIO usage summary -->
-  <rect x="620" y="234" width="342" height="118" rx="5" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
-  <text x="791" y="249" text-anchor="middle" font-size="8" font-weight="700" fill="#8b949e">GPIO SUMMARY</text>
-  <text x="630" y="265" font-size="8" fill="#8b949e">Used by project:</text><text x="760" y="265" font-size="8" fill="#e6edf3">21 pins</text>
-  <text x="630" y="279" font-size="8" fill="#8b949e">Restricted (USB/boot/flash):</text><text x="800" y="279" font-size="8" fill="#ff7b72">~9 pins</text>
-  <text x="630" y="293" font-size="8" fill="#8b949e">Still free for expansion:</text><text x="780" y="293" font-size="8" fill="#3fb950">~15 pins ✓</text>
-  <line x1="630" y1="303" x2="952" y2="303" stroke="#21262d" stroke-width="1"/>
-  <text x="630" y="317" font-size="7.5" fill="#3fb950">✓  SPI2 default pins (10–13) — no conflict</text>
-  <text x="630" y="330" font-size="7.5" fill="#3fb950">✓  I²C on IO8/IO9 — no remap needed</text>
-  <text x="630" y="343" font-size="7.5" fill="#3fb950">✓  6 LED + 1 servo + 1 IR on dedicated free GPIOs</text>
+  <rect x="620" y="228" width="342" height="132" rx="5" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="791" y="243" text-anchor="middle" font-size="8" font-weight="700" fill="#8b949e">GPIO SUMMARY</text>
+  <text x="630" y="259" font-size="8" fill="#8b949e">Used by project:</text><text x="800" y="259" font-size="8" fill="#e6edf3">21 pins</text>
+  <text x="630" y="273" font-size="8" fill="#8b949e">Restricted (UART0/strap/flash):</text><text x="850" y="273" font-size="8" fill="#ff7b72">11 pins</text>
+  <text x="630" y="287" font-size="8" fill="#8b949e">Free for expansion:</text><text x="800" y="287" font-size="8" fill="#ffa657">0 pins</text>
+  <line x1="630" y1="297" x2="952" y2="297" stroke="#21262d" stroke-width="1"/>
+  <text x="630" y="311" font-size="7.5" fill="#3fb950">✓  VSPI default pins (18,19,23,5) — no HSPI remap</text>
+  <text x="630" y="324" font-size="7.5" fill="#3fb950">✓  I²C on GPIO21/22 — hardware default, no remap</text>
+  <text x="630" y="337" font-size="7.5" fill="#3fb950">✓  Input-only 34/35/36/39 used strictly as INPUT</text>
+  <text x="630" y="350" font-size="7.5" fill="#3fb950">✓  GPIO2 (only strap pin used) — LED-only, zero risk</text>
 
-  <!-- Flash warning box -->
-  <rect x="620" y="369" width="342" height="60" rx="5" fill="#1a0808" stroke="#6e1313" stroke-width="1" stroke-dasharray="4,2"/>
-  <text x="791" y="384" text-anchor="middle" font-size="8" font-weight="700" fill="#ff7b72">🚫 S3 — NEVER USE</text>
-  <text x="630" y="399" font-size="7.5" fill="#ff7b72">GPIO26–32: Internal SPI flash (will crash)</text>
-  <text x="630" y="412" font-size="7.5" fill="#ffa657">GPIO33–37: Tied to PSRAM (on N8R8 variant)</text>
+  <!-- Never-use warning box -->
+  <rect x="620" y="374" width="342" height="76" rx="5" fill="#1a0808" stroke="#6e1313" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="791" y="389" text-anchor="middle" font-size="8" font-weight="700" fill="#ff7b72">🚫 CLASSIC ESP32 — NEVER USE</text>
+  <text x="630" y="404" font-size="7.5" fill="#ff7b72">GPIO6–11: Internal SPI flash (SD0-3/CMD/CLK) — boot fails</text>
+  <text x="630" y="417" font-size="7.5" fill="#ffa657">GPIO0,1,3,12,15: Boot-strap / UART0 — avoid</text>
+  <text x="630" y="430" font-size="7.5" fill="#ffa657">(GPIO2 is the sole safe exception — LED-only here)</text>
 </svg>
 </div>
 
 <!-- PIN TABLES -->
-<div class="sec">// Full pin assignment — ESP32-S3</div>
+<div class="sec">// Full pin assignment — ESP32 NodeMCU-32S</div>
 <div class="grid3">
   <div class="card">
     <div class="card-hd">📡 HC-SR04 × 3</div>
     <table>
       <tr><th>Sensor</th><th>Pin</th><th>GPIO</th><th>Note</th></tr>
-      <tr><td><span class="bdg b1">#1</span></td><td class="pc">TRIG</td><td class="gc">1</td><td class="nc">Direct</td></tr>
-      <tr><td><span class="bdg b1">#1</span></td><td class="pc">ECHO</td><td class="gc">2</td><td class="nc">Via VD</td></tr>
-      <tr><td><span class="bdg b2">#2</span></td><td class="pc">TRIG</td><td class="gc">4</td><td class="nc">Direct</td></tr>
-      <tr><td><span class="bdg b2">#2</span></td><td class="pc">ECHO</td><td class="gc">5</td><td class="nc">Via VD</td></tr>
-      <tr><td><span class="bdg b3">#3</span></td><td class="pc">TRIG</td><td class="gc">6</td><td class="nc">Direct</td></tr>
-      <tr><td><span class="bdg b3">#3</span></td><td class="pc">ECHO</td><td class="gc">7</td><td class="nc">Via VD</td></tr>
-      <tr><td colspan="2" class="pc">VCC ×3</td><td class="gc">VIN</td><td class="nc">5V rail</td></tr>
+      <tr><td><span class="bdg b1">#1</span></td><td class="pc">TRIG</td><td class="gc">13</td><td class="nc">Direct</td></tr>
+      <tr><td><span class="bdg b1">#1</span></td><td class="pc">ECHO</td><td class="gc">34</td><td class="nc">Input-only pin</td></tr>
+      <tr><td><span class="bdg b2">#2</span></td><td class="pc">TRIG</td><td class="gc">14</td><td class="nc">Direct</td></tr>
+      <tr><td><span class="bdg b2">#2</span></td><td class="pc">ECHO</td><td class="gc">35</td><td class="nc">Input-only pin</td></tr>
+      <tr><td><span class="bdg b3">#3</span></td><td class="pc">TRIG</td><td class="gc">27</td><td class="nc">Direct</td></tr>
+      <tr><td><span class="bdg b3">#3</span></td><td class="pc">ECHO</td><td class="gc">36 (VP)</td><td class="nc">Input-only pin</td></tr>
+      <tr><td colspan="2" class="pc">VCC ×3</td><td class="gc">5V</td><td class="nc">5V rail</td></tr>
     </table>
   </div>
 
   <div class="card">
-    <div class="card-hd">🔖 RC522 RFID — SPI2 default</div>
+    <div class="card-hd">🔖 RC522 RFID — VSPI default</div>
     <table>
       <tr><th>Pin</th><th>GPIO</th><th>Note</th></tr>
       <tr><td class="pc">VCC</td><td class="gc">3V3</td><td class="nc">3.3V only</td></tr>
-      <tr><td class="pc">SCK</td><td class="gc">12</td><td class="nc default-pin">SPI2 default ✓</td></tr>
-      <tr><td class="pc">MOSI</td><td class="gc">11</td><td class="nc default-pin">SPI2 default ✓</td></tr>
-      <tr><td class="pc">MISO</td><td class="gc">13</td><td class="nc default-pin">SPI2 default ✓</td></tr>
-      <tr><td class="pc">SS</td><td class="gc">10</td><td class="nc default-pin">SPI2 default ✓</td></tr>
-      <tr><td class="pc">RST</td><td class="gc">14</td><td class="nc">Any GPIO</td></tr>
+      <tr><td class="pc">SCK</td><td class="gc">18</td><td class="nc default-pin">VSPI default ✓</td></tr>
+      <tr><td class="pc">MOSI</td><td class="gc">23</td><td class="nc default-pin">VSPI default ✓</td></tr>
+      <tr><td class="pc">MISO</td><td class="gc">19</td><td class="nc default-pin">VSPI default ✓</td></tr>
+      <tr><td class="pc">SS</td><td class="gc">5</td><td class="nc default-pin">VSPI default ✓</td></tr>
+      <tr><td class="pc">RST</td><td class="gc">4</td><td class="nc">Any GPIO</td></tr>
       <tr><td class="pc">IRQ</td><td class="gc">—</td><td class="nc">Leave NC</td></tr>
     </table>
   </div>
@@ -478,10 +385,10 @@
     <div class="card-hd" style="color:#39d353">🖥️ LCD 16×2 I²C — default pins</div>
     <table>
       <tr><th>Pin</th><th>GPIO</th><th>Note</th></tr>
-      <tr><td class="pc">VCC</td><td class="gc">VIN</td><td class="nc">5V rail</td></tr>
+      <tr><td class="pc">VCC</td><td class="gc">5V</td><td class="nc">5V rail</td></tr>
       <tr><td class="pc">GND</td><td class="gc">GND</td><td class="nc">Shared</td></tr>
-      <tr><td class="pc">SDA</td><td class="gc" style="color:#39d353">8</td><td class="nc default-pin" style="color:#39d353">Default Wire ✓</td></tr>
-      <tr><td class="pc">SCL</td><td class="gc" style="color:#39d353">9</td><td class="nc default-pin" style="color:#39d353">Default Wire ✓</td></tr>
+      <tr><td class="pc">SDA</td><td class="gc" style="color:#39d353">21</td><td class="nc default-pin" style="color:#39d353">Default Wire ✓</td></tr>
+      <tr><td class="pc">SCL</td><td class="gc" style="color:#39d353">22</td><td class="nc default-pin" style="color:#39d353">Default Wire ✓</td></tr>
       <tr><td colspan="3" class="nc">Addr: <strong style="color:#e6edf3">0x27</strong> or <strong style="color:#e6edf3">0x3F</strong></td></tr>
     </table>
   </div>
@@ -490,12 +397,12 @@
     <div class="card-hd" style="color:#f85149">💡 Status LEDs — Red ×3 / Green ×3</div>
     <table>
       <tr><th>Slot</th><th>Color</th><th>GPIO</th><th>Note</th></tr>
-      <tr><td><span class="bdg b1">Front</span></td><td class="pc">Red</td><td class="gc">15</td><td class="nc">Occupied</td></tr>
-      <tr><td><span class="bdg b1">Front</span></td><td class="pc">Green</td><td class="gc">18</td><td class="nc">Free</td></tr>
-      <tr><td><span class="bdg b2">Left</span></td><td class="pc">Red</td><td class="gc">16</td><td class="nc">Occupied</td></tr>
-      <tr><td><span class="bdg b2">Left</span></td><td class="pc">Green</td><td class="gc">21</td><td class="nc">Free</td></tr>
-      <tr><td><span class="bdg b3">Right</span></td><td class="pc">Red</td><td class="gc">17</td><td class="nc">Occupied</td></tr>
-      <tr><td><span class="bdg b3">Right</span></td><td class="pc">Green</td><td class="gc">38</td><td class="nc">Free</td></tr>
+      <tr><td><span class="bdg b1">Front</span></td><td class="pc">Red</td><td class="gc">25</td><td class="nc">Occupied</td></tr>
+      <tr><td><span class="bdg b1">Front</span></td><td class="pc">Green</td><td class="gc">2</td><td class="nc">Free — strap pin, LED-safe</td></tr>
+      <tr><td><span class="bdg b2">Left</span></td><td class="pc">Red</td><td class="gc">26</td><td class="nc">Occupied</td></tr>
+      <tr><td><span class="bdg b2">Left</span></td><td class="pc">Green</td><td class="gc">16</td><td class="nc">Free</td></tr>
+      <tr><td><span class="bdg b3">Right</span></td><td class="pc">Red</td><td class="gc">32</td><td class="nc">Occupied</td></tr>
+      <tr><td><span class="bdg b3">Right</span></td><td class="pc">Green</td><td class="gc">17</td><td class="nc">Free</td></tr>
     </table>
   </div>
 
@@ -503,8 +410,8 @@
     <div class="card-hd" style="color:#db61a2">⚙️ Servo SG90 — Gate barrier</div>
     <table>
       <tr><th>Pin</th><th>GPIO</th><th>Note</th></tr>
-      <tr><td class="pc">Signal</td><td class="gc">39</td><td class="nc">ESP32Servo lib</td></tr>
-      <tr><td class="pc">VCC</td><td class="gc">VIN</td><td class="nc">5V rail</td></tr>
+      <tr><td class="pc">Signal</td><td class="gc">33</td><td class="nc">ESP32Servo lib</td></tr>
+      <tr><td class="pc">VCC</td><td class="gc">5V</td><td class="nc">5V rail</td></tr>
       <tr><td class="pc">GND</td><td class="gc">GND</td><td class="nc">Shared</td></tr>
       <tr><td colspan="3" class="nc">Opens on whitelisted RFID OR exit IR trigger, auto-closes after 3s</td></tr>
     </table>
@@ -514,7 +421,7 @@
     <div class="card-hd" style="color:#c9e94a">🚧 IR Sensor — Exit lane</div>
     <table>
       <tr><th>Pin</th><th>GPIO</th><th>Note</th></tr>
-      <tr><td class="pc">OUT</td><td class="gc">40</td><td class="nc">Digital, polarity configurable</td></tr>
+      <tr><td class="pc">OUT</td><td class="gc">39 (VN)</td><td class="nc">Digital, input-only pin, polarity configurable</td></tr>
       <tr><td class="pc">VCC</td><td class="gc">3V3</td><td class="nc">Most modules are 3.3V logic</td></tr>
       <tr><td class="pc">GND</td><td class="gc">GND</td><td class="nc">Shared</td></tr>
       <tr><td colspan="3" class="nc">No auth needed — any obstacle opens the gate to exit</td></tr>
@@ -523,7 +430,7 @@
 </div>
 
 <!-- CODE -->
-<div class="sec">// Sketch — ESP32-S3 (cleaner than DEVKIT V1)</div>
+<div class="sec">// Sketch — ESP32 NodeMCU-32S</div>
 <div class="code-card">
   <div class="code-hd">
     <span>📄 main_system.ino</span>
@@ -533,8 +440,10 @@
       <span class="lt lt-blu">ESP32Servo</span>
     </div>
   </div>
-  <pre><span class="cm">// ESP32-S3 DevKitC-1 — HC-SR04x3 + RC522 (whitelisted) + IR exit + LCD 16x2 I2C
-//                       + 6x status LED + shared SG90 gate + optional Blynk IoT</span>
+  <pre><span class="cm">// ESP32 NodeMCU-32S (WROOM-32, 38-pin) — HC-SR04x3 + RC522 (whitelisted) + IR exit + LCD 16x2 I2C
+//                       + 6x status LED + shared SG90 gate + optional Blynk IoT
+// Zero workarounds: VSPI (18/19/23/5) and I2C (21/22) hardware defaults used as-is;
+// GPIO2 is the one strap pin used, LED-only, safe.</span>
 
 <span class="kw">#include</span> <span class="st">"blynk_config.h"</span>   <span class="cm">// must come before any Blynk library include</span>
 <span class="kw">#if</span> ENABLE_BLYNK
@@ -552,34 +461,34 @@
 <span class="cm">// ── HC-SR04 + per-slot status LEDs ────────────────────</span>
 <span class="tp">struct</span> Sensor { <span class="kw">uint8_t</span> trig; <span class="kw">uint8_t</span> echo; <span class="kw">uint8_t</span> redPin; <span class="kw">uint8_t</span> greenPin; <span class="kw">const char</span>* label; };
 <span class="kw">const</span> Sensor sensors[] = {
-  { <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">15</span>, <span class="nm">18</span>, <span class="st">"Front"</span> },
-  { <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">16</span>, <span class="nm">21</span>, <span class="st">"Left"</span>  },
-  { <span class="nm">6</span>, <span class="nm">7</span>, <span class="nm">17</span>, <span class="nm">38</span>, <span class="st">"Right"</span> },
+  { <span class="nm">13</span>, <span class="nm">34</span>, <span class="nm">25</span>, <span class="nm">2</span>,  <span class="st">"Front"</span> },
+  { <span class="nm">14</span>, <span class="nm">35</span>, <span class="nm">26</span>, <span class="nm">16</span>, <span class="st">"Left"</span>  },
+  { <span class="nm">27</span>, <span class="nm">36</span>, <span class="nm">32</span>, <span class="nm">17</span>, <span class="st">"Right"</span> },
 };
 <span class="kw">const int</span> NUM_S = <span class="kw">sizeof</span>(sensors) / <span class="kw">sizeof</span>(sensors[<span class="nm">0</span>]);
 <span class="kw">const float</span> OCCUPIED_CM = <span class="nm">10.0f</span>; <span class="cm">// distance below this = slot occupied</span>
 <span class="kw">bool</span> slotOccupied[NUM_S] = { <span class="kw">false</span>, <span class="kw">false</span>, <span class="kw">false</span> };
 
-<span class="cm">// ── RC522 — SPI2 default pins, no workaround needed ──</span>
-<span class="kw">#define</span> <span class="df">SPI_SCK</span>   <span class="nm">12</span>   <span class="cm">// SPI2 default on S3</span>
-<span class="kw">#define</span> <span class="df">SPI_MISO</span>  <span class="nm">13</span>   <span class="cm">// SPI2 default on S3</span>
-<span class="kw">#define</span> <span class="df">SPI_MOSI</span>  <span class="nm">11</span>   <span class="cm">// SPI2 default on S3</span>
-<span class="kw">#define</span> <span class="df">RC_SS</span>     <span class="nm">10</span>   <span class="cm">// SPI2 default CS</span>
-<span class="kw">#define</span> <span class="df">RC_RST</span>    <span class="nm">14</span>
+<span class="cm">// ── RC522 — VSPI default pins (classic ESP32), no workaround needed ──</span>
+<span class="kw">#define</span> <span class="df">SPI_SCK</span>   <span class="nm">18</span>   <span class="cm">// VSPI default</span>
+<span class="kw">#define</span> <span class="df">SPI_MISO</span>  <span class="nm">19</span>   <span class="cm">// VSPI default</span>
+<span class="kw">#define</span> <span class="df">SPI_MOSI</span>  <span class="nm">23</span>   <span class="cm">// VSPI default</span>
+<span class="kw">#define</span> <span class="df">RC_SS</span>     <span class="nm">5</span>    <span class="cm">// VSPI default CS</span>
+<span class="kw">#define</span> <span class="df">RC_RST</span>    <span class="nm">4</span>
 <span class="clean">MFRC522 rfid(RC_SS, RC_RST);  // uses global SPI object</span>
 
-<span class="cm">// ── LCD I²C — default Wire pins on S3 ─────────────────</span>
-<span class="kw">#define</span> <span class="df">LCD_SDA</span>   <span class="nm">8</span>    <span class="cm">// default Wire SDA on S3</span>
-<span class="kw">#define</span> <span class="df">LCD_SCL</span>   <span class="nm">9</span>    <span class="cm">// default Wire SCL on S3</span>
+<span class="cm">// ── LCD I²C — default Wire pins on classic ESP32 ──────</span>
+<span class="kw">#define</span> <span class="df">LCD_SDA</span>   <span class="nm">21</span>   <span class="cm">// default Wire SDA on classic ESP32</span>
+<span class="kw">#define</span> <span class="df">LCD_SCL</span>   <span class="nm">22</span>   <span class="cm">// default Wire SCL on classic ESP32</span>
 <span class="kw">#define</span> <span class="df">LCD_ADDR</span>  <span class="nm">0x27</span>
 <span class="clean">LiquidCrystal_I2C lcd(LCD_ADDR, 16, 2);</span>
 
 <span class="cm">// ── IR sensor — exit lane obstacle detect ─────────────</span>
-<span class="kw">#define</span> <span class="df">IR_PIN</span> <span class="nm">40</span>
+<span class="kw">#define</span> <span class="df">IR_PIN</span> <span class="nm">39</span>
 <span class="kw">#define</span> <span class="df">IR_OBSTACLE_STATE</span> LOW  <span class="cm">// most IR modules pull LOW when blocked</span>
 
 <span class="cm">// ── Servo SG90 — shared entry/exit gate ───────────────</span>
-<span class="kw">#define</span> <span class="df">SERVO_PIN</span> <span class="nm">39</span>
+<span class="kw">#define</span> <span class="df">SERVO_PIN</span> <span class="nm">33</span>
 <span class="clean">Servo gate;</span>
 <span class="kw">const int</span> GATE_CLOSED = <span class="nm">0</span>;
 <span class="kw">const int</span> GATE_OPEN   = <span class="nm">90</span>;
@@ -613,7 +522,7 @@
 <span class="kw">void</span> <span class="fn">setup</span>() {
   Serial.<span class="fn">begin</span>(<span class="nm">115200</span>);
 
-  <span class="cm">// SPI2 — direct, no HSPI class needed on S3</span>
+  <span class="cm">// VSPI — direct, no HSPI class needed (classic ESP32 default)</span>
   <span class="clean">SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI, RC_SS);</span>
   rfid.<span class="fn">PCD_Init</span>();
   Serial.<span class="fn">println</span>(<span class="st">"RC522 ready"</span>);
@@ -630,7 +539,7 @@
   <span class="cm">// IR exit sensor</span>
   <span class="fn">pinMode</span>(IR_PIN, INPUT);
 
-  <span class="cm">// I²C — no remap needed, IO8/IO9 are defaults on S3</span>
+  <span class="cm">// I²C — no remap needed, GPIO21/GPIO22 are Wire defaults on classic ESP32</span>
   <span class="clean">Wire.begin(LCD_SDA, LCD_SCL);</span>
   lcd.<span class="fn">init</span>();
   lcd.<span class="fn">backlight</span>();

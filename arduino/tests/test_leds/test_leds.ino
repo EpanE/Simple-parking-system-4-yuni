@@ -1,8 +1,8 @@
 // Test sketch — 3x Red + 3x Green LED only
 // Verifies wiring/pin order by cycling each LED on then off in sequence
 
-const uint8_t redPins[]   = { 15, 16, 17 }; // Slot Front, Left, Right
-const uint8_t greenPins[] = { 18, 21, 38 }; // Slot Front, Left, Right
+const uint8_t redPins[]   = { 25, 26, 32 }; // Slot Front, Left, Right
+const uint8_t greenPins[] = { 2, 16, 17 };  // Slot Front, Left, Right
 const int NUM_LEDS = 3;
 
 void setup() {

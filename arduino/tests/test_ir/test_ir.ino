@@ -1,7 +1,7 @@
 // Test sketch — IR exit sensor only
 // Prints raw state + interpreted obstacle/clear to Serial
 
-#define IR_PIN 40
+#define IR_PIN 39
 #define IR_OBSTACLE_STATE LOW  // most IR modules pull LOW when blocked — flip if inverted
 
 void setup() {

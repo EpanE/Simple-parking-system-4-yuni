@@ -3,7 +3,7 @@
 
 #include <ESP32Servo.h>
 
-#define SERVO_PIN 39
+#define SERVO_PIN 33
 Servo gate;
 
 void setup() {
